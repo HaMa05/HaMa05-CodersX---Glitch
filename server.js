@@ -4,14 +4,17 @@
 // we've started you off with Express (https://expressjs.com/)
 // but feel free to use whatever libraries or frameworks you'd like through `package.json`.
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 const pug = require('pug');
 app.set('views', './views');
 app.set('view engines', 'pug');
+
+
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
 // https://expressjs.com/en/starter/basic-routing.html
-// app.get('/', (request, response) => {
-//   response.send('I love CodersX');
-// });
 
 var todos = [
   {name:'Đi chợ', id: 1},
@@ -29,6 +32,7 @@ app.get('/', (req, res) => {
   });
 });
 
+// get data
 app.get('/todos', (req, res) => {
   var q = req.query.q;
   var matchSearch = todos.filter((todo) => {
@@ -38,6 +42,12 @@ app.get('/todos', (req, res) => {
   res.render('index.pug', {
     todos: matchSearch 
   });
+})
+
+// post data
+app.post('/todos/create', (req, res) => {
+  todos.push(req.body); 
+  res.redirect('back');
 })
 
 
