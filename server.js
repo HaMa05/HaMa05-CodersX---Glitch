@@ -19,13 +19,9 @@ var todos = [
   {name:'Học code trên CodersX', id: 3}
 ];
 
-app.get('/', (request, response) => {
-  response.send('I love CodersX');
-});
-
-app.get('/todos', (request, response) => {
-  response.render('index.pug');
-})
+// app.get('/todos', (request, response) => {
+//   response.render('index.pug');
+// })
 
 app.get('/', (req, res) => {
 	res.render('index.pug', {
@@ -35,12 +31,12 @@ app.get('/', (req, res) => {
 
 app.get('/todos', (req, res) => {
   var q = req.query.q;
-  var matchSearch = todos.filter((animal) => {
-    return animal.name.toLowerCase().indexOf(q.toLowerCase()) !== -1;
+  var matchSearch = todos.filter((todo) => {
+    return todo.name.toLowerCase().indexOf(q.toLowerCase()) !== -1;
   });
 
   res.render('index.pug', {
-    animals: matchSearch 
+    todos: matchSearch 
   });
 })
 
