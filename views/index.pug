@@ -1,6 +1,6 @@
-ul 
-  li Đi chợ
-  li Nấu cơm
-  li Rửa bát
-  li Học code tại codersX
-  
+form(action="/todos" method="GET")
+	input(id="search" type="text" name="q")
+	button search
+ul
+	each a in todos
+		li= a.name
