@@ -1,7 +1,7 @@
-# CordersX - Work
+# CodersX - Work
 
 ## Your Project
-The exercises of NodeJs course from lesson 1 to end in [CordersX](https://school.coders-x.com/)
+The exercises of NodeJs course from lesson 1 to end in [CodersX](https://school.coders-x.com/)
 
 
 
