@@ -10,17 +10,24 @@ const pug = require('pug');
 app.set('views', './views');
 app.set('view engines', 'pug');
 
+const low = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync');
+
+const adapter = new FileSync('db.json');
+const db = low(adapter);
+db.defaults({ todos: []})
+  .write()
 
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 // https://expressjs.com/en/starter/basic-routing.html
 
-var todos = [
-  {name:'Đi chợ', id: 1},
-  {name:'Nấu cơm', id: 2},
-  {name:'Học code trên CodersX', id: 3}
-];
+// var todos = [
+//   {name:'Đi chợ', id: 1},
+//   {name:'Nấu cơm', id: 2},
+//   {name:'Học code trên CodersX', id: 3}
+// ];
 
 // app.get('/todos', (request, response) => {
 //   response.render('index.pug');
@@ -28,15 +35,16 @@ var todos = [
 
 app.get('/', (req, res) => {
 	res.render('index.pug', {
-    todos: todos 
+    todos: db.get('todos').value()
   });
 });
 
+let todos = db.get('todos').value();
 // get data
 app.get('/todos', (req, res) => {
   var q = req.query.q;
   var matchSearch = todos.filter((todo) => {
-    return todo.name.toLowerCase().indexOf(q.toLowerCase()) !== -1;
+    return todo.text.toLowerCase().indexOf(q.toLowerCase()) !== -1;
   });
 
   res.render('index.pug', {
@@ -46,9 +54,10 @@ app.get('/todos', (req, res) => {
 
 // post data
 app.post('/todos/create', (req, res) => {
-  todos.push(req.body); 
+  db.get('todos').push(req.body).write(); 
   res.redirect('back');
 })
+
 
 
 // listen for requests :)
