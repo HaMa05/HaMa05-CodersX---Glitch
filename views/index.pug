@@ -3,9 +3,12 @@ form(action="/todos" method="GET")
 	button search
   
 form(action="/todos/create" method="POST")
-	input(id="create" type="text" name="name")
+	input(id="create" type="text" name="text")
 	button Create
   
 ul
-	each a in todos
-		li= a.name
+	each todo in todos
+		li
+			span= todo.text
+			span &nbsp &nbsp;
+			a(href="/todos/" + todo.id + "/delete", style='text-decoration: none') Delete
