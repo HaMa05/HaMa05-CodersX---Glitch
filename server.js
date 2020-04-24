@@ -3,23 +3,22 @@
 
 // we've started you off with Express (https://expressjs.com/)
 // but feel free to use whatever libraries or frameworks you'd like through `package.json`.
-const express = require('express');
-const bodyParser = require('body-parser');
+const express = require("express");
+const bodyParser = require("body-parser");
 const app = express();
-const pug = require('pug');
-app.set('views', './views');
-app.set('view engines', 'pug');
+const pug = require("pug");
+app.set("views", "./views");
+app.set("view engines", "pug");
 
-const low = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync');
+const low = require("lowdb");
+const FileSync = require("lowdb/adapters/FileSync");
 
-const adapter = new FileSync('db.json');
+const adapter = new FileSync("db.json");
 const db = low(adapter);
-db.defaults({ todos: []})
-  .write()
+db.defaults({ todos: [] }).write();
 
-app.use(express.json()) // for parsing application/json
-app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(express.json()); // for parsing application/json
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 // https://expressjs.com/en/starter/basic-routing.html
 
@@ -33,32 +32,42 @@ app.use(express.urlencoded({ extended: true })) // for parsing application/x-www
 //   response.render('index.pug');
 // })
 
-app.get('/', (req, res) => {
-	res.render('index.pug', {
-    todos: db.get('todos').value()
+app.get("/", (req, res) => {
+  res.render("index.pug", {
+    todos: db.get("todos").value()
   });
 });
 
-let todos = db.get('todos').value();
 // get data
-app.get('/todos', (req, res) => {
+app.get("/todos", (req, res) => {
+  let todos = db.get("todos").value();
   var q = req.query.q;
-  var matchSearch = todos.filter((todo) => {
+  var matchSearch = todos.filter(todo => {
     return todo.text.toLowerCase().indexOf(q.toLowerCase()) !== -1;
   });
-
-  res.render('index.pug', {
-    todos: matchSearch 
+  res.render("index.pug", {
+    todos: matchSearch
   });
-})
+});
+
+//delete todo
+app.get("/todos/:id/delete", (req, res) => {
+  let id = req.params.id;
+  
+  db.get('todos')
+    .remove({ id: id })
+    .write();
+  
+  res.redirect("/");
+});
 
 // post data
-app.post('/todos/create', (req, res) => {
-  db.get('todos').push(req.body).write(); 
-  res.redirect('back');
-})
-
-
+app.post("/todos/create", (req, res) => {
+  db.get("todos")
+    .push(req.body)
+    .write();
+  res.redirect("back");
+});
 
 // listen for requests :)
 app.listen(process.env.PORT, () => {
